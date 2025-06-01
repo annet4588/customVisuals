@@ -105,7 +105,19 @@ export class Visual implements IVisual {
         // Set mapped value for SVG
         const svgAnchor = alignmentMap[labelAlignment] || "start";
 
+        // Max size of label
         const maxFontSize = 60;
+
+        // Label position setting (e.g., "top" or "bottom")
+        const labelPositionValue = settings.labelPosition.value.value;
+
+        // Compute the label Y position based on the setting
+        const labelBoxY = labelPositionValue === "bottom"
+            ? viewport.height - labelBoxHeight
+            : 0;
+
+        const labelTextY = labelBoxY + labelBoxHeight / 2;
+
         // Dinamic FontSize looping
         while(textWidth < viewport.width && fontSize < maxFontSize){
             fontSize++;
@@ -117,19 +129,28 @@ export class Visual implements IVisual {
             textWidth = textMeasurementService.measureSvgTextWidth(textProperties);
         }
 
+        // Set SVG dimensions
+        this.svg.attr('width', viewport.width)
+                .attr('height', viewport.height);
 
-        this.svg.attr('width', viewport.width).attr('height', viewport.height);
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
-        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value).attr('fill-opacity', fillOpacity);
+        this.kpiBox.attr('width', viewport.width)
+                   .attr('height', viewport.height)
+                   .attr('fill', settings.fill.value.value)
+                   .attr('fill-opacity', fillOpacity);
         // Make labelBox to be full width but hardcode the height to 20
-        this.labelBox.attr('width', viewport.width).attr('height', labelBoxHeight).attr('fill', settings.fill.value.value);
+        this.labelBox.attr('x', 0) 
+                     .attr('y', labelBoxY)
+                     .attr('width', viewport.width)
+                     .attr('height', labelBoxHeight)
+                     .attr('fill', settings.fill.value.value);
         this.labelText.attr('text-anchor', svgAnchor)
                         .attr('x',
                             svgAnchor === 'middle' ? viewport.width / 2:  // Positioning the label based on alignment
                             svgAnchor === 'end' ? viewport.width - 5: 5
                         )
                         .attr('dominant-baseline', 'middle')
-                        .attr('y', labelBoxHeight/2)
+                        .attr('y', labelTextY)
                         .attr('class', 'kpiLabel')
                         .attr('font-size', settings.fontSize.value)
                         .attr('fill', fontColorLabel.value)

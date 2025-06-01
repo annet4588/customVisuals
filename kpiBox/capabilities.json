@@ -27,7 +27,11 @@
             "alignment": true
           }
         }
-      },
+        },
+        "labelPosition": {
+          "displayName": "Label Position",
+          "type": { "enumeration": []}
+        },
         "fontColorLabel": {
           "displayName": "Choose Label Font Colour",
           "type": {
