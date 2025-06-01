@@ -112,6 +112,7 @@ export class Visual implements IVisual {
                         .attr('font-size', fontSize)
                         .text(kpiValue);
         }
+        
     /**
      * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
      * This method is called once every time we open properties pane or when the user edit any format property. 
@@ -119,4 +120,5 @@ export class Visual implements IVisual {
     public getFormattingModel(): powerbi.visuals.FormattingModel {
         return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
     }
+    
 }
