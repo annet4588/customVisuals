@@ -90,6 +90,7 @@ export class Visual implements IVisual {
 
         let labelBoxHeight:number = textMeasurementService.measureSvgTextRect(textProperties).height;
         let fillOpacity = settings.opacity.value;
+        let fontColor = settings.fontColor.value;
 
         // Dinamic FontSize looping
         while(textWidth < viewport.width){
@@ -122,6 +123,7 @@ export class Visual implements IVisual {
                         .attr('x', viewport.width/2)
                         .attr('class', 'kpiNumber')
                         .attr('font-size', fontSize)
+                        .attr('fill', fontColor.value)
                         .text(kpiValue);
         }
         

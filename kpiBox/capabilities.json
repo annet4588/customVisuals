@@ -29,6 +29,16 @@
             }
           }
         },
+        "fontColor": {
+          "displayName": "Choose Font Colour",
+          "type": {
+             "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
         "opacity":{
           "displayName": "Choose Opacity",
           "type":{

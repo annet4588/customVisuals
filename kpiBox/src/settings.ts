@@ -72,9 +72,15 @@ class DataPointCardSettings extends FormattingSettingsCard {
         value: 12
     });
 
+    fontColor = new formattingSettings.ColorPicker({
+       name: "fontColor",
+       displayName: "Choose Font Colour",
+       value: {value: "black"} //Default black
+    });
+
     name: string = "dataPoint";
     displayName: string = "KPI Settings";
-    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontSize, this.opacity];
+    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontSize, this.opacity, this.fontColor];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
 
