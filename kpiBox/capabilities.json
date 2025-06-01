@@ -20,7 +20,17 @@
               }
             }
           }
-        },     
+        },  
+        "fontColorLabel": {
+          "displayName": "Choose Label Font Colour",
+          "type": {
+             "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },   
         "fontSize": {
           "displayName": "Label Font Size",
           "type": {

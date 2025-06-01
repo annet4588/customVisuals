@@ -65,6 +65,11 @@ class DataPointCardSettings extends FormattingSettingsCard {
     //     displayName: "Color saturation",
     //     value: { value: "" }
     // });
+    fontColorLabel = new formattingSettings.ColorPicker({
+       name: "fontColorLabel",
+       displayName: "Choose Label Font Colour",
+       value: {value: "black"} //Default black
+    });
 
     fontSize = new formattingSettings.NumUpDown({
         name: "fontSize",
@@ -80,7 +85,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
 
     name: string = "dataPoint";
     displayName: string = "KPI Settings";
-    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontSize, this.opacity, this.fontColor];
+    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontColorLabel, this.fontSize, this.opacity, this.fontColor];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
 
