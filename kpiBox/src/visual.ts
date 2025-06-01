@@ -45,12 +45,21 @@ export class Visual implements IVisual {
     private formattingSettings: VisualFormattingSettingsModel;
     private formattingSettingsService: FormattingSettingsService;
     private svg: Selection<SVGElement>;
+    // Add rectangles and text to KPI Visuals
+    private kpiBox: Selection<SVGElement>;
+    private labelBox: Selection<SVGElement>;
+    private kpiText: Selection<SVGElement>;
+    private labelText: Selection<SVGElement>;
+
 
     constructor(options: VisualConstructorOptions) {
         console.log('Visual constructor', options);
-        this.formattingSettingsService = new FormattingSettingsService();
-        
+        this.formattingSettingsService = new FormattingSettingsService();      
         this.svg = d3.select(options.element).append('svg').classed('kpiBox', true);
+        this.kpiBox = this.svg.append('rect');
+        this.labelBox = this.svg.append('rect');
+        this.kpiText = this.svg.append('text');
+        this.labelText = this.svg.append('text');
     }
 
     public update(options: VisualUpdateOptions) {
@@ -62,8 +71,19 @@ export class Visual implements IVisual {
        
         /*Add width and height to the viewport*/
         let viewport = options.viewport;
+        let dataView = options.dataViews[0];
+
         this.svg.attr('width', viewport.width).attr('height', viewport.height);
-    }
+        // Make the KPIBox to be full width, with a hardcoded color - which can be changed
+        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', 'aliceblue');
+        // Make labelBox to be full width but hardcode the height to 20
+        this.labelBox.attr('width', viewport.width).attr('height', 20).attr('fill', 'pink');
+        this.labelText.attr('text-anchor', 'start')
+                        .attr('dominant-baseline', 'middle')
+                        .attr('y', 10)
+                        .attr('class', 'kpiLabel')
+                        .text(dataView.metadata.columns[0].displayName);
+                    }
     /**
      * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
      * This method is called once every time we open properties pane or when the user edit any format property. 
