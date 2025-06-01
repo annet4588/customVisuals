@@ -71,6 +71,7 @@ export class Visual implements IVisual {
         console.log("VisualFormattingSettingsModel:", this.formattingSettings);
         console.log("formatting settings", this.formattingSettings)
         console.log('Visual update', options);
+        console.log('Formatting Settings', this.formattingSettings);
        
         /*Add width and height to the viewport*/
         let viewport = options.viewport;

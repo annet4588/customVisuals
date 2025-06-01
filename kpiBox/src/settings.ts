@@ -50,7 +50,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
 
     fill = new formattingSettings.ColorPicker({
         name: "fill",
-        displayName: "Fill",
+        displayName: "Fill Colour",
         value: { value: "" }
     });
 
@@ -62,12 +62,12 @@ class DataPointCardSettings extends FormattingSettingsCard {
 
     fontSize = new formattingSettings.NumUpDown({
         name: "fontSize",
-        displayName: "Text Size",
+        displayName: "Label Font Size",
         value: 12
     });
 
     name: string = "dataPoint";
-    displayName: string = "Data colors";
+    displayName: string = "KPI Settings";
     slices: Array<FormattingSettingsSlice> = [this.fill, this.fontSize];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
