@@ -117,7 +117,7 @@ export class Visual implements IVisual {
         // console.log(iValueFormatter.format(dataView.single.value));
         this.kpiText.attr('text-anchor', 'middle')
                         .attr('dominant-baseline', 'middle')
-                        .attr('y', viewport.height/2)
+                        .attr('y', viewport.height/2 + labelBoxHeight/2)
                         .attr('x', viewport.width/2)
                         .attr('class', 'kpiNumber')
                         .attr('font-size', fontSize)
