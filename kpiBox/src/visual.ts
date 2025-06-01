@@ -89,6 +89,7 @@ export class Visual implements IVisual {
         }
 
         let labelBoxHeight:number = textMeasurementService.measureSvgTextRect(textProperties).height;
+        let fillOpacity = settings.opacity.value;
 
         // Dinamic FontSize looping
         while(textWidth < viewport.width){
@@ -104,7 +105,7 @@ export class Visual implements IVisual {
 
         this.svg.attr('width', viewport.width).attr('height', viewport.height);
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
-        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value).attr('fill-opacity', 0.3);
+        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value).attr('fill-opacity', fillOpacity);
         // Make labelBox to be full width but hardcode the height to 20
         this.labelBox.attr('width', viewport.width).attr('height', labelBoxHeight).attr('fill', settings.fill.value.value);
         this.labelText.attr('text-anchor', 'start')

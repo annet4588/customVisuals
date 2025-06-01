@@ -54,6 +54,12 @@ class DataPointCardSettings extends FormattingSettingsCard {
         value: { value: "#ADD8E6" }
     });
 
+    opacity = new formattingSettings.NumUpDown({
+        name: "opacity",
+        displayName: "Choose Opacity",
+        value: 0.3 //Default
+    });
+
     // fillRule = new formattingSettings.ColorPicker({
     //     name: "fillRule",
     //     displayName: "Color saturation",
@@ -68,7 +74,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
 
     name: string = "dataPoint";
     displayName: string = "KPI Settings";
-    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontSize];
+    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontSize, this.opacity];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
 

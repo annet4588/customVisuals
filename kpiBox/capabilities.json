@@ -28,6 +28,12 @@
               "fontSize": true
             }
           }
+        },
+        "opacity":{
+          "displayName": "Choose Opacity",
+          "type":{
+            "numeric": true
+          }
         }
       }
     }
