@@ -65,6 +65,13 @@ class DataPointCardSettings extends FormattingSettingsCard {
     //     displayName: "Color saturation",
     //     value: { value: "" }
     // });
+    labelAlignment = new formattingSettings.AlignmentGroup({
+       name: "labelAlignment",
+       displayName: "Label Alignment",
+       value: "middle",
+       mode: powerbi.visuals.AlignmentGroupMode.Horizonal
+    });
+
     fontColorLabel = new formattingSettings.ColorPicker({
        name: "fontColorLabel",
        displayName: "Choose Label Font Colour",
@@ -74,7 +81,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
     fontSize = new formattingSettings.NumUpDown({
         name: "fontSize",
         displayName: "Label Font Size",
-        value: 12
+        value: 20
     });
 
     fontColor = new formattingSettings.ColorPicker({
@@ -85,7 +92,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
 
     name: string = "dataPoint";
     displayName: string = "KPI Settings";
-    slices: Array<FormattingSettingsSlice> = [this.fill, this.fontColorLabel, this.fontSize, this.opacity, this.fontColor];
+    slices: Array<FormattingSettingsSlice> = [this.fill, this.labelAlignment, this.fontColorLabel, this.fontSize, this.opacity, this.fontColor];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
 

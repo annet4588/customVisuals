@@ -21,6 +21,13 @@
             }
           }
         },  
+        "labelAlignment": {
+        "type": {
+          "formatting": {
+            "alignment": true
+          }
+        }
+      },
         "fontColorLabel": {
           "displayName": "Choose Label Font Colour",
           "type": {

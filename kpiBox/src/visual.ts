@@ -72,6 +72,7 @@ export class Visual implements IVisual {
         console.log("formatting settings", this.formattingSettings)
         console.log('Visual update', options);
         console.log('Formatting Settings', this.formattingSettings);
+        
        
         /*Add width and height to the viewport*/
         let viewport = options.viewport;
@@ -92,9 +93,21 @@ export class Visual implements IVisual {
         let fillOpacity = settings.opacity.value;
         let fontColor = settings.fontColor.value;
         let fontColorLabel = settings.fontColorLabel.value;
+        let labelAlignment = settings.labelAlignment.value;
 
+        // Map UI PowerBI alignment to SVG-compatible values
+        const alignmentMap = {
+            left: "start",
+            center: "middle",
+            right: "end"
+        };
+
+        // Set mapped value for SVG
+        const svgAnchor = alignmentMap[labelAlignment] || "start";
+
+        const maxFontSize = 60;
         // Dinamic FontSize looping
-        while(textWidth < viewport.width){
+        while(textWidth < viewport.width && fontSize < maxFontSize){
             fontSize++;
             let textProperties: TextProperties = {
                 text:kpiValue,
@@ -110,7 +123,11 @@ export class Visual implements IVisual {
         this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value).attr('fill-opacity', fillOpacity);
         // Make labelBox to be full width but hardcode the height to 20
         this.labelBox.attr('width', viewport.width).attr('height', labelBoxHeight).attr('fill', settings.fill.value.value);
-        this.labelText.attr('text-anchor', 'start')
+        this.labelText.attr('text-anchor', svgAnchor)
+                        .attr('x',
+                            svgAnchor === 'middle' ? viewport.width / 2:  // Positioning the label based on alignment
+                            svgAnchor === 'end' ? viewport.width - 5: 5
+                        )
                         .attr('dominant-baseline', 'middle')
                         .attr('y', labelBoxHeight/2)
                         .attr('class', 'kpiLabel')
