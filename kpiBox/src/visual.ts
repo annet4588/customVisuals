@@ -75,6 +75,7 @@ export class Visual implements IVisual {
         /*Add width and height to the viewport*/
         let viewport = options.viewport;
         let dataView = options.dataViews[0];
+        let iValueFormatter = valueFormatter.create({format: dataView.metadata.columns[0].format});
 
         this.svg.attr('width', viewport.width).attr('height', viewport.height);
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
@@ -86,12 +87,14 @@ export class Visual implements IVisual {
                         .attr('y', 10)
                         .attr('class', 'kpiLabel')
                         .text(dataView.metadata.columns[0].displayName);
+        //Check the formatter is working in the console
+        // console.log(iValueFormatter.format(dataView.single.value));
         this.kpiText.attr('text-anchor', 'middle')
                         .attr('dominant-baseline', 'middle')
                         .attr('y', viewport.height/2)
                         .attr('x', viewport.width/2)
                         .attr('class', 'kpiNumber')
-                        .text(dataView.single.value.toString());
+                        .text(iValueFormatter.format(dataView.single.value));
         }
     /**
      * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
