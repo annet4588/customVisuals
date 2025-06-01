@@ -81,6 +81,14 @@ export class Visual implements IVisual {
         let textWidth:number = 0;
         let fontSize:number = 7;
         let settings = this.formattingSettings.dataPointCard;
+        let labelText = dataView.metadata.columns[0].displayName;
+        let textProperties: TextProperties = {
+            text: labelText,
+            fontFamily: "sans-serif",
+            fontSize: settings.fontSize.value +"pt"
+        }
+
+        let labelBoxHeight:number = textMeasurementService.measureSvgTextRect(textProperties).height;
 
         // Dinamic FontSize looping
         while(textWidth < viewport.width){
@@ -98,13 +106,13 @@ export class Visual implements IVisual {
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
         this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value).attr('fill-opacity', 0.3);
         // Make labelBox to be full width but hardcode the height to 20
-        this.labelBox.attr('width', viewport.width).attr('height', 20).attr('fill', settings.fill.value.value);
+        this.labelBox.attr('width', viewport.width).attr('height', labelBoxHeight).attr('fill', settings.fill.value.value);
         this.labelText.attr('text-anchor', 'start')
                         .attr('dominant-baseline', 'middle')
-                        .attr('y', 10)
+                        .attr('y', labelBoxHeight/2)
                         .attr('class', 'kpiLabel')
                         .attr('font-size', settings.fontSize.value)
-                        .text(dataView.metadata.columns[0].displayName);
+                        .text(labelText);
         //Check the formatter is working in the console
         // console.log(iValueFormatter.format(dataView.single.value));
         this.kpiText.attr('text-anchor', 'middle')
