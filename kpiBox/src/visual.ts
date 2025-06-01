@@ -96,9 +96,9 @@ export class Visual implements IVisual {
 
         this.svg.attr('width', viewport.width).attr('height', viewport.height);
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
-        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value);
+        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value).attr('fill-opacity', 0.3);
         // Make labelBox to be full width but hardcode the height to 20
-        this.labelBox.attr('width', viewport.width).attr('height', 20).attr('fill', 'pink');
+        this.labelBox.attr('width', viewport.width).attr('height', 20).attr('fill', settings.fill.value.value);
         this.labelText.attr('text-anchor', 'start')
                         .attr('dominant-baseline', 'middle')
                         .attr('y', 10)
