@@ -103,6 +103,7 @@ export class Visual implements IVisual {
                         .attr('dominant-baseline', 'middle')
                         .attr('y', 10)
                         .attr('class', 'kpiLabel')
+                        .attr('font-size', settings.fontSize.value)
                         .text(dataView.metadata.columns[0].displayName);
         //Check the formatter is working in the console
         // console.log(iValueFormatter.format(dataView.single.value));
