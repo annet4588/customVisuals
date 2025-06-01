@@ -83,7 +83,13 @@ export class Visual implements IVisual {
                         .attr('y', 10)
                         .attr('class', 'kpiLabel')
                         .text(dataView.metadata.columns[0].displayName);
-                    }
+        this.kpiText.attr('text-anchor', 'middle')
+                        .attr('dominant-baseline', 'middle')
+                        .attr('y', viewport.height/2)
+                        .attr('x', viewport.width/2)
+                        .attr('class', 'kpiNumber')
+                        .text(dataView.single.value.toString());
+        }
     /**
      * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
      * This method is called once every time we open properties pane or when the user edit any format property. 
