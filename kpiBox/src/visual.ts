@@ -76,6 +76,21 @@ export class Visual implements IVisual {
         let viewport = options.viewport;
         let dataView = options.dataViews[0];
         let iValueFormatter = valueFormatter.create({format: dataView.metadata.columns[0].format});
+        let kpiValue:string = iValueFormatter.format(dataView.single.value);
+        let textWidth:number = 0;
+        let fontSize:number = 7;
+
+        // Dinamic FontSize looping
+        while(textWidth < viewport.width){
+            fontSize++;
+            let textProperties: TextProperties = {
+                text:kpiValue,
+                fontFamily: "sans-serif",
+                fontSize: fontSize+"px",
+            }
+            textWidth = textMeasurementService.measureSvgTextWidth(textProperties);
+        }
+
 
         this.svg.attr('width', viewport.width).attr('height', viewport.height);
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
@@ -94,7 +109,8 @@ export class Visual implements IVisual {
                         .attr('y', viewport.height/2)
                         .attr('x', viewport.width/2)
                         .attr('class', 'kpiNumber')
-                        .text(iValueFormatter.format(dataView.single.value));
+                        .attr('font-size', fontSize)
+                        .text(kpiValue);
         }
     /**
      * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
