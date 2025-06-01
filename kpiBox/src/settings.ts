@@ -51,7 +51,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
     fill = new formattingSettings.ColorPicker({
         name: "fill",
         displayName: "Fill Colour",
-        value: { value: "" }
+        value: { value: "#ADD8E6" }
     });
 
     // fillRule = new formattingSettings.ColorPicker({

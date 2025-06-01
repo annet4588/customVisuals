@@ -80,6 +80,7 @@ export class Visual implements IVisual {
         let kpiValue:string = iValueFormatter.format(dataView.single.value);
         let textWidth:number = 0;
         let fontSize:number = 7;
+        let settings = this.formattingSettings.dataPointCard;
 
         // Dinamic FontSize looping
         while(textWidth < viewport.width){
@@ -95,7 +96,7 @@ export class Visual implements IVisual {
 
         this.svg.attr('width', viewport.width).attr('height', viewport.height);
         // Make the KPIBox to be full width, with a hardcoded color - which can be changed
-        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', 'aliceblue');
+        this.kpiBox.attr('width', viewport.width).attr('height', viewport.height).attr('fill', settings.fill.value.value);
         // Make labelBox to be full width but hardcode the height to 20
         this.labelBox.attr('width', viewport.width).attr('height', 20).attr('fill', 'pink');
         this.labelText.attr('text-anchor', 'start')
