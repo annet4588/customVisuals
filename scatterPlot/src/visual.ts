@@ -35,6 +35,8 @@ import IVisual = powerbi.extensibility.visual.IVisual;
 
 import * as d3 from "d3";
 import { scaleLinear, scaleBand } from "d3";
+import { axisBottom, axisLeft } from "d3-axis";
+
 type Selection<T extends d3.BaseType> = d3.Selection<T, any, any,any>;
 import { textMeasurementService, interfaces } from "powerbi-visuals-utils-formattingutils";
 import TextProperties = interfaces.TextProperties;
@@ -49,10 +51,12 @@ export class Visual implements IVisual {
     private formattingSettings: VisualFormattingSettingsModel;
     private formattingSettingsService: FormattingSettingsService;
     private svg: Selection<SVGElement>;
-    private xAxisGroup: Selection<SVGElement>;
-    private yAxisGroup: Selection<SVGElement>;
-    private dotsGroup: Selection<SVGElement>;
-    private parentGroup: Selection<SVGElement>;
+    private xAxisGroup: Selection<SVGGElement>;
+    private yAxisGroup: Selection<SVGGElement>;
+    private dotsGroup: Selection<SVGGElement>;
+    private parentGroup: Selection<SVGGElement>;
+    // Declare a margin object
+    static margins = { top: 30, right: 30, bottom: 30, left: 30};
 
 
     constructor(options: VisualConstructorOptions) {
@@ -83,6 +87,15 @@ export class Visual implements IVisual {
         let xMax =0, yMax = 0;
         // To query that sum value has been set
         let xIndex = -1, yIndex = -1;
+
+        //Resize viewport
+        this.svg.attr('height', viewport.height).attr('width', viewport.width);
+        
+        // Chart height
+        let chartHeight = viewport.height - Visual.margins.top - Visual.margins.bottom;
+        // Chart width
+        let chartWidth = viewport.width - Visual.margins.left - Visual.margins.right;
+
         // Holding the category data
         let categories = dataView.categorical.categories[0].values;
   
@@ -108,10 +121,18 @@ export class Visual implements IVisual {
         console.log(dotData, xMax, yMax);
 
         // Define our scales
-        let xScale = scaleLinear().domain([0, xMax]).range([0, viewport.width]);
-        let yScale = scaleLinear().domain([0, yMax]).range([viewport.height, 0]); // Inverse y value
-        console.log(xScale(20000));
-        console.log(yScale(100));
+        let xScale = scaleLinear().domain([0, xMax]).range([0, chartWidth]);
+        let yScale = scaleLinear().domain([0, yMax]).range([chartHeight, 0]); // Inverse y value
+        
+        // Make all elements to be shifted by left and top margins
+        this.parentGroup.attr('transform', 'translate('+Visual.margins.left+', '+Visual.margins.top+')');
+        
+        //Call axis bottom x scale
+        this.xAxisGroup.attr('transform', 'translate(0, '+chartHeight+')').call(axisBottom(xScale));
+        this.yAxisGroup.attr('transform', 'translate(0, 0)').call(axisLeft(xScale));
+        
+        // console.log(xScale(20000));
+        // console.log(yScale(100));
         }
         
     /**
