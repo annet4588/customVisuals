@@ -34,6 +34,7 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 
 import * as d3 from "d3";
+// import { scaleLinear, scaleBand } from "d3";
 type Selection<T extends d3.BaseType> = d3.Selection<T, any, any,any>;
 import { textMeasurementService, interfaces } from "powerbi-visuals-utils-formattingutils";
 import TextProperties = interfaces.TextProperties;
@@ -68,8 +69,6 @@ export class Visual implements IVisual {
     public update(options: VisualUpdateOptions) {
         this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
 
-        console.log("VisualFormattingSettingsModel:", this.formattingSettings);
-        console.log("formatting settings", this.formattingSettings)
         console.log('Visual update', options);
         console.log('Formatting Settings', this.formattingSettings);
         
@@ -77,9 +76,36 @@ export class Visual implements IVisual {
         /*Add width and height to the viewport*/
         let viewport = options.viewport;
         let dataView = options.dataViews[0];
-        let iValueFormatter = valueFormatter.create({format: dataView.metadata.columns[0].format});
-
+        // Holding the value data
+        let dataPoints = dataView.categorical.values;
+        let dotData = [];
+        // To generate the scales for the axis
+        let xMax =0, yMax = 0;
+        // To query that sum value has been set
+        let xIndex = -1, yIndex = -1;
+        // Holding the category data
+        let categories = dataView.categorical.categories[0].values;
   
+        // Dynamically detects which data field is assigned the "x" role in the data view
+        if(dataPoints[0].source.roles.x){
+           xIndex = 0;
+           yIndex = 1;
+        }else{
+            xIndex = 1;
+            yIndex = 0;
+        }
+        // Loop through all of our categories, for each
+        // it will push in the group
+        categories.forEach((d,i)=>{
+            dotData.push({
+                'group': d,
+                'y':dataPoints[yIndex].values[i],
+                'x':dataPoints[xIndex].values[i],
+             })
+        })
+        xMax = Number(dataPoints[xIndex].maxLocal);
+        yMax = Number(dataPoints[yIndex].maxLocal);
+        console.log(dotData, xMax, yMax);
 
         }
         
