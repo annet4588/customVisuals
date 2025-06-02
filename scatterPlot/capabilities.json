@@ -1,0 +1,106 @@
+{
+  "suppressDefaultTitle": true,
+  "dataRoles": [
+    {
+      "displayName": "X value",
+      "name": "x",
+      "kind": "Measure"
+    },
+     {
+      "displayName": "Y value",
+      "name": "y",
+      "kind": "Measure"
+    },
+     {
+      "displayName": "Group by",
+      "name": "group",
+      "kind": "Grouping"
+    }
+  ],
+  "objects": {
+    "dataPoint": {
+      "displayName": "KPI Settings",
+      "properties": {      
+        "fill": {
+          "displayName": "Fill Colour",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },  
+        "labelAlignment": {
+        "type": {
+          "formatting": {
+            "alignment": true
+          }
+        }
+        },
+        "labelPosition": {
+          "displayName": "Label Position",
+          "type": { "enumeration": []}
+        },
+        "fontColorLabel": {
+          "displayName": "Choose Label Font Colour",
+          "type": {
+             "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },   
+        "fontSize": {
+          "displayName": "Label Font Size",
+          "type": {
+            "formatting": {
+              "fontSize": true
+            }
+          }
+        },
+        "fontColor": {
+          "displayName": "Choose Font Colour",
+          "type": {
+             "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "opacity":{
+          "displayName": "Choose Opacity",
+          "type":{
+            "numeric": true
+          }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "categorical":{
+         "categories":{
+            "for": {"in": "group"}
+         },
+         "values":{
+            "select":[
+              {"bind": {"to": "x"}},
+              {"bind": {"to": "y"}}
+            ]
+         }
+      },
+      "conditions": [
+        {
+          "x":{ "max": 1 },
+          "y":{ "max": 1 },
+          "group":{ "max": 1 }
+        }            
+      ]
+    }
+
+  ],
+  "privileges": []
+}
