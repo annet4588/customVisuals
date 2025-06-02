@@ -34,7 +34,7 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 
 import * as d3 from "d3";
-// import { scaleLinear, scaleBand } from "d3";
+import { scaleLinear, scaleBand } from "d3";
 type Selection<T extends d3.BaseType> = d3.Selection<T, any, any,any>;
 import { textMeasurementService, interfaces } from "powerbi-visuals-utils-formattingutils";
 import TextProperties = interfaces.TextProperties;
@@ -107,6 +107,11 @@ export class Visual implements IVisual {
         yMax = Number(dataPoints[yIndex].maxLocal);
         console.log(dotData, xMax, yMax);
 
+        // Define our scales
+        let xScale = scaleLinear().domain([0, xMax]).range([0, viewport.width]);
+        let yScale = scaleLinear().domain([0, yMax]).range([viewport.height, 0]); // Inverse y value
+        console.log(xScale(20000));
+        console.log(yScale(100));
         }
         
     /**
