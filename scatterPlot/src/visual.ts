@@ -83,6 +83,8 @@ export class Visual implements IVisual {
         // Holding the value data
         let dataPoints = dataView.categorical.values;
         let dotData = [];
+        let settings = this.formattingSettings.dataPointCard;
+
         // To generate the scales for the axis
         let xMax =0, yMax = 0;
         // To query that sum value has been set
@@ -132,18 +134,42 @@ export class Visual implements IVisual {
         //Places the y-axis at the left of the chart, axisLeft(yScale) creates the vertical axis with labels
         this.yAxisGroup.attr('transform', 'translate(0, 0)').call(axisLeft(yScale));
 
-        // Binds dotData (array of data points) to circle elements
-        this.dotsGroup
+        // Selects all cirlse elements inside dotsGroup
+        // Binds dotData array to the selection
+        // d.group key ensures correct tracking of which data point corresponds to which circle,so D3 knows which circles to update or remove
+        const dots = this.dotsGroup
             .selectAll('circle')
-            .data(dotData)
-            .enter() // Creates a placeholder for each data point
-            .append('circle') // Adds a circle element for each data item
-            .attr('r', 5) // Sets the radius of each circle(dot) to 5px
-            .attr('cx', (d)=>xScale(d.x)) //Sets the x-coordinate of each circle based on the x-value of the data point, scaled to pixel space
-            .attr('cy', (d)=>yScale(d.y)) // Sets the y-coordinates
-            .attr('class', 'dot')
-            .attr('id', (d)=>d.group); //Sets the HTML id attribute of each circle to the category/group name
-        
+            .data(dotData, (d: any) => d.group); // use group as key if unique
+
+        // Handling enter - new elements, update- existing elems, and exit - remove elms
+        dots.join(
+            enter => enter.append('circle')
+                        .attr('class', 'dot') // for CSS styling
+                        .attr('id', (d: any) => d.group) // optional: uniquely identifies the dot
+                        .attr('cx', (d: any) => xScale(d.x)) // scaled x-position
+                        .attr('cy', (d: any) => yScale(d.y)) // scaled y-position
+                        .attr('r', settings.radius.value) // current radius from formatting pane
+                        .attr('fill', settings.fill.value.value), // current colour from formatting pane
+            update => update 
+                        .attr('cx', (d: any) => xScale(d.x)) // recalculate x position
+                        .attr('cy', (d: any) => yScale(d.y)) // recalculate y position
+                        .attr('r', settings.radius.value) // update radius
+                        .attr('fill', settings.fill.value.value), // update color
+            exit => exit.remove()
+        );
+
+        // Binds dotData (array of data points) to circle elements
+        // this.dotsGroup
+        //     .selectAll('circle')
+        //     .data(dotData)
+        //     .enter() // Creates a placeholder for each data point
+        //     .append('circle') // Adds a circle element for each data item
+        //     .attr('r', settings.radius.value) // Sets the radius of each circle(dot) to 5px
+        //     .attr('cx', (d)=>xScale(d.x)) //Sets the x-coordinate of each circle based on the x-value of the data point, scaled to pixel space
+        //     .attr('cy', (d)=>yScale(d.y)) // Sets the y-coordinates
+        //     .attr('class', 'dot')
+        //     .attr('id', (d)=>d.group) //Sets the HTML id attribute of each circle to the category/group name
+        //     .attr('fill', settings.fill.value.value);
         // console.log(xScale(20000));
         // console.log(yScale(100));
         }

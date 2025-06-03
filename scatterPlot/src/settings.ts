@@ -50,59 +50,21 @@ class DataPointCardSettings extends FormattingSettingsCard {
 
     fill = new formattingSettings.ColorPicker({
         name: "fill",
-        displayName: "Fill Colour",
+        displayName: "Dot Colour",
         value: { value: "#ADD8E6" }
     });
 
-    opacity = new formattingSettings.NumUpDown({
-        name: "opacity",
-        displayName: "Choose Opacity",
-        value: 0.3 //Default
+    radius = new formattingSettings.Slider({
+        name: "radius",
+        displayName: "Dot radius",
+        value: 5, //Default
     });
 
-    // fillRule = new formattingSettings.ColorPicker({
-    //     name: "fillRule",
-    //     displayName: "Color saturation",
-    //     value: { value: "" }
-    // });
-    labelAlignment = new formattingSettings.AlignmentGroup({
-       name: "labelAlignment",
-       displayName: "Label Alignment",
-       value: "middle",
-       mode: powerbi.visuals.AlignmentGroupMode.Horizonal
-    });
-
-    labelPosition = new formattingSettings.ItemDropdown({
-       name: "labelPosition",
-       displayName: "Label Position",
-       items: [
-        { value: "top", displayName: "Top"},
-        { value: "bottom", displayName: "Bottom"}
-       ],
-        value:{ value: "top", displayName: "Top"}, //Default position
-    });
-
-    fontColorLabel = new formattingSettings.ColorPicker({
-       name: "fontColorLabel",
-       displayName: "Choose Label Font Colour",
-       value: {value: "black"} //Default black
-    });
-
-    fontSize = new formattingSettings.NumUpDown({
-        name: "fontSize",
-        displayName: "Label Font Size",
-        value: 20
-    });
-
-    fontColor = new formattingSettings.ColorPicker({
-       name: "fontColor",
-       displayName: "Choose Font Colour",
-       value: {value: "black"} //Default black
-    });
+    
 
     name: string = "dataPoint";
-    displayName: string = "KPI Settings";
-    slices: Array<FormattingSettingsSlice> = [this.fill, this.labelPosition, this.labelAlignment, this.fontColorLabel, this.fontSize, this.opacity, this.fontColor];
+    displayName: string = "Scatterplot Settings";
+    slices: Array<FormattingSettingsSlice> = [this.fill, this.radius];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
 

@@ -19,10 +19,10 @@
   ],
   "objects": {
     "dataPoint": {
-      "displayName": "KPI Settings",
+      "displayName": "Scatterplot Settings",
       "properties": {      
         "fill": {
-          "displayName": "Fill Colour",
+          "displayName": "Dot Colour",
           "type": {
             "fill": {
               "solid": {
@@ -30,48 +30,9 @@
               }
             }
           }
-        },  
-        "labelAlignment": {
-        "type": {
-          "formatting": {
-            "alignment": true
-          }
-        }
-        },
-        "labelPosition": {
-          "displayName": "Label Position",
-          "type": { "enumeration": []}
-        },
-        "fontColorLabel": {
-          "displayName": "Choose Label Font Colour",
-          "type": {
-             "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
-        },   
-        "fontSize": {
-          "displayName": "Label Font Size",
-          "type": {
-            "formatting": {
-              "fontSize": true
-            }
-          }
-        },
-        "fontColor": {
-          "displayName": "Choose Font Colour",
-          "type": {
-             "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
-        },
-        "opacity":{
-          "displayName": "Choose Opacity",
+        },        
+        "radius":{
+          "displayName": "Dot radius",
           "type":{
             "numeric": true
           }
