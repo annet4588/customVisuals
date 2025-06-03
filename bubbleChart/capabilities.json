@@ -1,0 +1,75 @@
+{
+  "suppressDefaultTitle": true,
+  "dataRoles": [
+    {
+      "displayName": "X value",
+      "name": "x",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "Y value",
+      "name": "y",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "One dot per",
+      "name": "group",
+      "kind": "Grouping"
+    },
+     {
+      "displayName": "Categories",
+      "name": "categories",
+      "kind": "Grouping"
+    }
+  ],
+  "objects": {
+    "dataPoint": {
+      "displayName": "Scatterplot Settings",
+      "properties": {      
+        "fill": {
+          "displayName": "Dot Colour",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },        
+        "radius":{
+          "displayName": "Dot radius",
+          "type":{
+            "numeric": true
+          }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "categorical":{
+         "categories":{
+            "for": {"in": "group"}
+         },
+          "values":{
+            "group":{
+              "by": "categories",          
+              "select":[
+                {"bind": {"to": "x"}},
+                {"bind": {"to": "y"}}
+              ]
+            }
+          }
+      },
+      "conditions": [
+        {
+          "x":{ "max": 1 },
+          "y":{ "max": 1 },
+          "group":{ "max": 1 }
+        }            
+      ]
+    }
+
+  ],
+  "privileges": []
+}

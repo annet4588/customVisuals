@@ -63,7 +63,7 @@ class DataPointCardSettings extends FormattingSettingsCard {
     
 
     name: string = "dataPoint";
-    displayName: string = "Bubblechart Settings";
+    displayName: string = "Scatterplot Settings";
     slices: Array<FormattingSettingsSlice> = [this.fill, this.radius];
     // slices: Array<FormattingSettingsSlice> = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
