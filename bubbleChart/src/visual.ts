@@ -43,6 +43,7 @@ import TextProperties = interfaces.TextProperties;
 import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 import { VisualFormattingSettingsModel } from "./settings";
+import { schemeCategory10 } from "d3-scale-chromatic";
 
 export class Visual implements IVisual {
     //private target: HTMLElement;
@@ -57,6 +58,7 @@ export class Visual implements IVisual {
     private parentGroup: Selection<SVGGElement>;
     // Declare a margin object
     static margins = { top: 30, right: 30, bottom: 30, left: 30};
+    private color: readonly string[];
 
 
     constructor(options: VisualConstructorOptions) {
@@ -67,6 +69,7 @@ export class Visual implements IVisual {
         this.xAxisGroup = this.parentGroup.append('g').attr('class', 'x axis');
         this.yAxisGroup = this.parentGroup.append('g').attr('class', 'y axis');
         this.dotsGroup = this.parentGroup.append('g').attr('class', 'dots');
+        this.color = schemeCategory10;
  
     }
 
@@ -179,9 +182,9 @@ export class Visual implements IVisual {
                .selectAll('g.categories')                              
                .data(catData)
                .join(
-                enter => enter.append('g').attr('class','categories').attr('id', d=>d.cat),
-                update=>update,
-                exit=>exit.remove()
+                    enter => enter.append('g').attr('class','categories').attr('id', d=>d.cat),
+                    update=>update,
+                    exit=>exit.remove()
                );
         // draw the dots inside each group  
         catGroups.selectAll('circle')
@@ -197,10 +200,13 @@ export class Visual implements IVisual {
                     update => update
                                     .attr('cx', (d: any) => xScale(d.x))
                                     .attr('cy', (d: any) => yScale(d.y))
-                                    .attr('r', settings.radius.value)
-                                    .attr('fill', settings.fill.value.value),
+                                    .attr('r', settings.radius.value),
+                                    // .attr('fill', settings.fill.value.value),
                     exit => exit.remove()
-                );                                  
+                ); 
+            // Manually setting the group colours using D3 select   
+            this.dotsGroup.select('g#Excel').selectAll('circle').attr('fill', this.color[0]);
+            this.dotsGroup.select('g#Outlook').selectAll('circle').attr('fill', this.color[1]);                           
         }
         
     /**
@@ -276,3 +282,5 @@ export class Visual implements IVisual {
         //     .attr('fill', settings.fill.value.value);
         // console.log(xScale(20000));
         // console.log(yScale(100));
+
+        
