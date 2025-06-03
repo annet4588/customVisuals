@@ -101,34 +101,12 @@ export class Visual implements IVisual {
         // Holding the category data
         let categories = dataView.categorical.categories[0].values;
   
-        // // Dynamically detects which data field is assigned the "x" role in the data view
-        // if(dataPoints[0].source.roles.x){
-        //    xIndex = 0;
-        //    yIndex = 1;
-        // }else{
-        //     xIndex = 1;
-        //     yIndex = 0;
-        // }
 
         //Arrays for distinc categories to keep track of unique group/category names
         let distinctCategories = [];
         // Name of all the categories, to hold structured grouped data for each unique category
         let catData = []; // potentially useful for grouped visual styles (color, legend, etc)
 
-
-        // Loop through all of our categories, for each
-        // it will push in the group
-        // categories.forEach((d,i)=>{
-        //     dotData.push({
-        //         'group': d,
-        //         'y':dataPoints[yIndex].values[i],
-        //         'x':dataPoints[xIndex].values[i],
-        //      })
-        // })
-        //Return the max of the column as computed by PowerBI metadata
-        // xMax = Number(dataPoints[xIndex].maxLocal);
-        // yMax = Number(dataPoints[yIndex].maxLocal);
-        
         // Loop through each data column (each elms in dataPoints array)
         dataPoints.forEach(function(d){
             if(d.source.roles.x){  // Check if the column is assign to 'x' role in capabilities.json
@@ -153,7 +131,6 @@ export class Visual implements IVisual {
 
         dataPoints.forEach(function(d,i){
             let cat = d.source.groupName;
-
             catData.forEach(function(p){
                 if(p.cat == cat){
                     p.data.push(d);
@@ -196,30 +173,95 @@ export class Visual implements IVisual {
         //Places the y-axis at the left of the chart, axisLeft(yScale) creates the vertical axis with labels
         this.yAxisGroup.attr('transform', 'translate(0, 0)').call(axisLeft(yScale));
 
-        // Selects all cirlse elements inside dotsGroup
+
+        // Structure the groups
+        let catGroups = this.dotsGroup
+               .selectAll('g.categories')                              
+               .data(catData)
+               .join(
+                enter => enter.append('g').attr('class','categories').attr('id', d=>d.cat),
+                update=>update,
+                exit=>exit.remove()
+               );
+        // draw the dots inside each group  
+        catGroups.selectAll('circle')
+                .data(d=>d.values) // d.values contains { cat, x, y }
+                .join(
+                    enter => enter.append('circle')
+                                  .attr('class', 'dot')
+                                  .attr('id', (d: any) => d.cat) 
+                                  .attr('cx', (d: any) => xScale(d.x))
+                                  .attr('cy', (d: any) => yScale(d.y))
+                                  .attr('r', settings.radius.value)
+                                  .attr('fill', settings.fill.value.value),
+                    update => update
+                                    .attr('cx', (d: any) => xScale(d.x))
+                                    .attr('cy', (d: any) => yScale(d.y))
+                                    .attr('r', settings.radius.value)
+                                    .attr('fill', settings.fill.value.value),
+                    exit => exit.remove()
+                );                                  
+        }
+        
+    /**
+     * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
+     * This method is called once every time we open properties pane or when the user edit any format property. 
+     */
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
+    }
+    
+}
+
+
+
+     // Selects all cirlse elements inside dotsGroup
         // Binds dotData array to the selection
         // d.group key ensures correct tracking of which data point corresponds to which circle,so D3 knows which circles to update or remove
-        const dots = this.dotsGroup
-            .selectAll('circle')
-            .data(dotData, (d: any) => d.group); // use group as key if unique
+        // const dots = this.dotsGroup
+        //     .selectAll('circle')
+        //     .data(dotData, (d: any) => d.group); // use group as key if unique
 
         // Handling enter - new elements, update- existing elems, and exit - remove elms
-        dots.join(
-            enter => enter.append('circle')
-                        .attr('class', 'dot') // for CSS styling
-                        .attr('id', (d: any) => d.group) // optional: uniquely identifies the dot
-                        .attr('cx', (d: any) => xScale(d.x)) // scaled x-position
-                        .attr('cy', (d: any) => yScale(d.y)) // scaled y-position
-                        .attr('r', settings.radius.value) // current radius from formatting pane
-                        .attr('fill', settings.fill.value.value), // current colour from formatting pane
-            update => update 
-                        .attr('cx', (d: any) => xScale(d.x)) // recalculate x position
-                        .attr('cy', (d: any) => yScale(d.y)) // recalculate y position
-                        .attr('r', settings.radius.value) // update radius
-                        .attr('fill', settings.fill.value.value), // update color
-            exit => exit.remove()
-        );
+        // dots.join(
+        //     enter => enter.append('circle')
+        //                 .attr('class', 'dot') // for CSS styling
+        //                 .attr('id', (d: any) => d.group) // optional: uniquely identifies the dot
+        //                 .attr('cx', (d: any) => xScale(d.x)) // scaled x-position
+        //                 .attr('cy', (d: any) => yScale(d.y)) // scaled y-position
+        //                 .attr('r', settings.radius.value) // current radius from formatting pane
+        //                 .attr('fill', settings.fill.value.value), // current colour from formatting pane
+        //     update => update 
+        //                 .attr('cx', (d: any) => xScale(d.x)) // recalculate x position
+        //                 .attr('cy', (d: any) => yScale(d.y)) // recalculate y position
+        //                 .attr('r', settings.radius.value) // update radius
+        //                 .attr('fill', settings.fill.value.value), // update color
+        //     exit => exit.remove()
+        // );
 
+        // Loop through all of our categories, for each
+        // it will push in the group
+        // categories.forEach((d,i)=>{
+        //     dotData.push({
+        //         'group': d,
+        //         'y':dataPoints[yIndex].values[i],
+        //         'x':dataPoints[xIndex].values[i],
+        //      })
+        // })
+        //Return the max of the column as computed by PowerBI metadata
+        // xMax = Number(dataPoints[xIndex].maxLocal);
+        // yMax = Number(dataPoints[yIndex].maxLocal);
+        
+                // // Dynamically detects which data field is assigned the "x" role in the data view
+        // if(dataPoints[0].source.roles.x){
+        //    xIndex = 0;
+        //    yIndex = 1;
+        // }else{
+        //     xIndex = 1;
+        //     yIndex = 0;
+        // }
+
+        
         // Binds dotData (array of data points) to circle elements
         // this.dotsGroup
         //     .selectAll('circle')
@@ -234,14 +276,3 @@ export class Visual implements IVisual {
         //     .attr('fill', settings.fill.value.value);
         // console.log(xScale(20000));
         // console.log(yScale(100));
-        }
-        
-    /**
-     * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
-     * This method is called once every time we open properties pane or when the user edit any format property. 
-     */
-    public getFormattingModel(): powerbi.visuals.FormattingModel {
-        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
-    }
-    
-}
