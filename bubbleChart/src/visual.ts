@@ -118,9 +118,22 @@ export class Visual implements IVisual {
                 'x':dataPoints[xIndex].values[i],
              })
         })
-        xMax = Number(dataPoints[xIndex].maxLocal);
-        yMax = Number(dataPoints[yIndex].maxLocal);
-        console.log(dotData, xMax, yMax);
+        //Return the max of the column as computed by PowerBI metadata
+        // xMax = Number(dataPoints[xIndex].maxLocal);
+        // yMax = Number(dataPoints[yIndex].maxLocal);
+        
+        // Loop through each data column (each elms in dataPoints array)
+        dataPoints.forEach(function(d){
+            if(d.source.roles.x){  // Check if the column is assign to 'x' role in capabilities.json
+                d.values.forEach(function(p){ // Loop through the actual values of this column - xAxis
+                    if (Number(p) > xMax) { xMax = Number(p);} // Compare each value to the current value xMAx and update if greater
+                })
+            }else if (d.source.roles.y){ // Process with y similarly
+                d.values.forEach(function(p){
+                    if (Number(p) > yMax) { yMax = Number(p);}
+                })
+            }
+        })
 
         // Define our scales
         let xScale = scaleLinear().domain([0, xMax]).range([0, chartWidth]);
