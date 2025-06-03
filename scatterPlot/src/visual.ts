@@ -127,9 +127,22 @@ export class Visual implements IVisual {
         // Make all elements to be shifted by left and top margins
         this.parentGroup.attr('transform', 'translate('+Visual.margins.left+', '+Visual.margins.top+')');
         
-        //Call axis bottom x scale
+        //Moves the x-axis to the bottom of the chart area, axisBottom(xScale) creates axis ticks and labels using the x scale
         this.xAxisGroup.attr('transform', 'translate(0, '+chartHeight+')').call(axisBottom(xScale));
-        this.yAxisGroup.attr('transform', 'translate(0, 0)').call(axisLeft(xScale));
+        //Places the y-axis at the left of the chart, axisLeft(yScale) creates the vertical axis with labels
+        this.yAxisGroup.attr('transform', 'translate(0, 0)').call(axisLeft(yScale));
+
+        // Binds dotData (array of data points) to circle elements
+        this.dotsGroup
+            .selectAll('circle')
+            .data(dotData)
+            .enter() // Creates a placeholder for each data point
+            .append('circle') // Adds a circle element for each data item
+            .attr('r', 5) // Sets the radius of each circle(dot) to 5px
+            .attr('cx', (d)=>xScale(d.x)) //Sets the x-coordinate of each circle based on the x-value of the data point, scaled to pixel space
+            .attr('cy', (d)=>yScale(d.y)) // Sets the y-coordinates
+            .attr('class', 'dot')
+            .attr('id', (d)=>d.group); //Sets the HTML id attribute of each circle to the category/group name
         
         // console.log(xScale(20000));
         // console.log(yScale(100));
