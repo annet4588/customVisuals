@@ -89,10 +89,8 @@ export class Visual implements IVisual {
         let settings = this.formattingSettings.dataPointCard;
 
         // To generate the scales for the axis
-        let xMax =0, yMax = 0;
-        // To query that sum value has been set
-        let xIndex = -1, yIndex = -1;
-
+        let xMax =0, yMax = 0, sizeMax = 0, sizeMin = 0;
+       
         //Resize viewport
         this.svg.attr('height', viewport.height).attr('width', viewport.width);
         
@@ -116,9 +114,14 @@ export class Visual implements IVisual {
                 d.values.forEach(function(p){ // Loop through the actual values of this column - xAxis
                     if (Number(p) > xMax) { xMax = Number(p);} // Compare each value to the current value xMAx and update if greater
                 })
-            }else if (d.source.roles.y){ // Process with y similarly
+            }if (d.source.roles.y){ // Process with y similarly
                 d.values.forEach(function(p){
                     if (Number(p) > yMax) { yMax = Number(p);}
+                })
+            }if (d.source.roles.size){ // Process with y similarly
+                d.values.forEach(function(p){
+                    if (Number(p) > sizeMax) { sizeMax = Number(p);}
+                    if (Number(p) < sizeMin) { sizeMin = Number(p);}
                 })
             }
         })
@@ -146,18 +149,22 @@ export class Visual implements IVisual {
             //Initialises indexes to locate the positions of the x and y data within the d.data array
             let xIndex = -1;
             let yIndex = -1;
+            let sizeIndex = -1;
             d.data.forEach(function(p,q){ // Finds which entry represent x-values and y-values by checking their roles
                 if(p.source.roles.x){
                     xIndex = q;
-                }else if(p.source.roles.y){
+                }if(p.source.roles.y){
                     yIndex = q;
+                }if(p.source.roles.size){
+                    sizeIndex = q;
                 }
             })
             categories.forEach(function(p,q){
                 d.values.push({ //Pushes a new object into d.values for each data point in the category
                     'cat':p,                     //the category name (Excel, Powerpoint, etc)
                     'x':d.data[xIndex].values[q], //the x-value at position q
-                    'y':d.data[yIndex].values[q]} //the y-value at position q
+                    'y':d.data[yIndex].values[q], //the y-value at position q
+                    'size':d.data[sizeIndex].values[q]} //the size-value at position q
                 );
             })
         })
@@ -167,7 +174,7 @@ export class Visual implements IVisual {
         // Define our scales
         let xScale = scaleLinear().domain([0, xMax]).range([0, chartWidth]);
         let yScale = scaleLinear().domain([0, yMax]).range([chartHeight, 0]); // Inverse y value
-        
+        let sizeScale = scaleLinear().domain([sizeMin, sizeMax]).range([3, 10]);
         // Make all elements to be shifted by left and top margins
         this.parentGroup.attr('transform', 'translate('+Visual.margins.left+', '+Visual.margins.top+')');
         
@@ -176,6 +183,9 @@ export class Visual implements IVisual {
         //Places the y-axis at the left of the chart, axisLeft(yScale) creates the vertical axis with labels
         this.yAxisGroup.attr('transform', 'translate(0, 0)').call(axisLeft(yScale));
 
+        console.log(catData);
+        console.log(sizeMin, sizeMax);
+        console.log(sizeScale(sizeMin));
 
         // Structure the groups
         let catGroups = this.dotsGroup
@@ -195,7 +205,7 @@ export class Visual implements IVisual {
                                   .attr('id', (d: any) => d.cat) 
                                   .attr('cx', (d: any) => xScale(d.x))
                                   .attr('cy', (d: any) => yScale(d.y))
-                                  .attr('r', settings.radius.value)
+                                  .attr('r', (d:any)=>sizeScale(d.size))
                                   .attr('fill', settings.fill.value.value),
                     update => update
                                     .attr('cx', (d: any) => xScale(d.x))

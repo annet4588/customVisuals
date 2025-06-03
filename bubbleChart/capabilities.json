@@ -12,6 +12,11 @@
       "kind": "Measure"
     },
     {
+      "displayName": "Size",
+      "name": "size",
+      "kind": "Measure"
+    },
+    {
       "displayName": "One dot per",
       "name": "group",
       "kind": "Grouping"
@@ -56,7 +61,8 @@
               "by": "categories",          
               "select":[
                 {"bind": {"to": "x"}},
-                {"bind": {"to": "y"}}
+                {"bind": {"to": "y"}},
+                {"bind": {"to": "size"}}
               ]
             }
           }
