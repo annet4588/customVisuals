@@ -44,6 +44,7 @@ import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 import { VisualFormattingSettingsModel } from "./settings";
 import { schemeCategory10 } from "d3-scale-chromatic";
+import { scaleOrdinal } from "d3";
 
 export class Visual implements IVisual {
     //private target: HTMLElement;
@@ -59,6 +60,7 @@ export class Visual implements IVisual {
     // Declare a margin object
     static margins = { top: 30, right: 30, bottom: 30, left: 30};
     private color: readonly string[];
+    private colorScale: d3.ScaleOrdinal<string, string>;
 
 
     constructor(options: VisualConstructorOptions) {
@@ -70,6 +72,7 @@ export class Visual implements IVisual {
         this.yAxisGroup = this.parentGroup.append('g').attr('class', 'y axis');
         this.dotsGroup = this.parentGroup.append('g').attr('class', 'dots');
         this.color = schemeCategory10;
+        this.colorScale = d3.scaleOrdinal<string, string>().range(schemeCategory10);
  
     }
 
@@ -210,13 +213,13 @@ export class Visual implements IVisual {
                     update => update
                                     .attr('cx', (d: any) => xScale(d.x))
                                     .attr('cy', (d: any) => yScale(d.y))
-                                    .attr('r', settings.radius.value),
-                                    // .attr('fill', settings.fill.value.value),
+                                    .attr('r', settings.radius.value)
+                                    .attr('fill', (d: any)=>this.colorScale(d.cat) ),
                     exit => exit.remove()
                 ); 
             // Manually setting the group colours using D3 select   
-            this.dotsGroup.select('g#Excel').selectAll('circle').attr('fill', this.color[0]);
-            this.dotsGroup.select('g#Outlook').selectAll('circle').attr('fill', this.color[1]);                           
+            // this.dotsGroup.select('g#Excel').selectAll('circle').attr('fill', this.color[0]);
+            // this.dotsGroup.select('g#Outlook').selectAll('circle').attr('fill', this.color[1]);                           
         }
         
     /**
