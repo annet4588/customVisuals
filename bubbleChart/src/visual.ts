@@ -101,23 +101,30 @@ export class Visual implements IVisual {
         // Holding the category data
         let categories = dataView.categorical.categories[0].values;
   
-        // Dynamically detects which data field is assigned the "x" role in the data view
-        if(dataPoints[0].source.roles.x){
-           xIndex = 0;
-           yIndex = 1;
-        }else{
-            xIndex = 1;
-            yIndex = 0;
-        }
+        // // Dynamically detects which data field is assigned the "x" role in the data view
+        // if(dataPoints[0].source.roles.x){
+        //    xIndex = 0;
+        //    yIndex = 1;
+        // }else{
+        //     xIndex = 1;
+        //     yIndex = 0;
+        // }
+
+        //Arrays for distinc categories to keep track of unique group/category names
+        let distinctCategories = [];
+        // Name of all the categories, to hold structured grouped data for each unique category
+        let catData = []; // potentially useful for grouped visual styles (color, legend, etc)
+
+
         // Loop through all of our categories, for each
         // it will push in the group
-        categories.forEach((d,i)=>{
-            dotData.push({
-                'group': d,
-                'y':dataPoints[yIndex].values[i],
-                'x':dataPoints[xIndex].values[i],
-             })
-        })
+        // categories.forEach((d,i)=>{
+        //     dotData.push({
+        //         'group': d,
+        //         'y':dataPoints[yIndex].values[i],
+        //         'x':dataPoints[xIndex].values[i],
+        //      })
+        // })
         //Return the max of the column as computed by PowerBI metadata
         // xMax = Number(dataPoints[xIndex].maxLocal);
         // yMax = Number(dataPoints[yIndex].maxLocal);
@@ -134,6 +141,48 @@ export class Visual implements IVisual {
                 })
             }
         })
+
+        //Grouping metadata for categories
+        dataPoints.forEach(function(d,i){
+            let cat = d.source.groupName; // identifies all unique group/category names using d.source.groupName
+            if(distinctCategories.indexOf(cat) ==-1) { // If no category - Initializes a new object in catData
+                distinctCategories.push(cat);  
+                catData.push({'cat':cat, 'data':[], 'values':[]})
+            }
+        })
+
+        dataPoints.forEach(function(d,i){
+            let cat = d.source.groupName;
+
+            catData.forEach(function(p){
+                if(p.cat == cat){
+                    p.data.push(d);
+                }
+            })
+        })
+
+        //Iterates over each entry in the catData array
+        catData.forEach(function(d,i){
+            //Initialises indexes to locate the positions of the x and y data within the d.data array
+            let xIndex = -1;
+            let yIndex = -1;
+            d.data.forEach(function(p,q){ // Finds which entry represent x-values and y-values by checking their roles
+                if(p.source.roles.x){
+                    xIndex = q;
+                }else if(p.source.roles.y){
+                    yIndex = q;
+                }
+            })
+            categories.forEach(function(p,q){
+                d.values.push({ //Pushes a new object into d.values for each data point in the category
+                    'cat':p,                     //the category name (Excel, Powerpoint, etc)
+                    'x':d.data[xIndex].values[q], //the x-value at position q
+                    'y':d.data[yIndex].values[q]} //the y-value at position q
+                );
+            })
+        })
+
+        console.log(catData);
 
         // Define our scales
         let xScale = scaleLinear().domain([0, xMax]).range([0, chartWidth]);
